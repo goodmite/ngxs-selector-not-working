@@ -1,8 +1,8 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {NgForm} from '@angular/forms';
-import {HttpClient} from '@angular/common/http';
-import {catchError, map} from 'rxjs/operators';
+import {AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild} from '@angular/core';
+import * as d3 from 'd3';
+import {Select, Store} from '@ngxs/store';
 import {Observable} from 'rxjs';
+import {SaveVersionSuccess} from './state/app.actions';
 
 export interface News {
   heading:string,
@@ -11,22 +11,30 @@ export interface News {
 @Component({
   selector: 'app-root',
   template: `
-      <div (clickOutside)="onClickedOutside($event)">
-          clickOutside will not work outside of red border
-      </div>
+      <button (click)="test()">click</button>
   `,
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit{
-  constructor(){
 
+  @Select(state => state.version.versions) version$: Observable<any[]>;
+  constructor(private store: Store) {
   }
 
   ngOnInit(): void {
+    this.version$.subscribe((versions) => {
+      alert()
+    });
   }
 
-  onClickedOutside(){
-    alert("hello");
+
+  test(){
+    this.store.dispatch([
+      new SaveVersionSuccess({bot:null, version:{id: 1, updated_fields:{'workflow':false}}})
+    ]);
   }
+
+
+
 
 }
